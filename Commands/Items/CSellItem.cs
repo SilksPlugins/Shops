@@ -1,4 +1,5 @@
-﻿using OpenMod.API.Commands;
+﻿using Microsoft.Extensions.Localization;
+using OpenMod.API.Commands;
 using OpenMod.Core.Commands;
 using SDG.Unturned;
 using Shops.Commands.Actions;
@@ -20,25 +21,26 @@ namespace Shops.Commands.Items
         private readonly ShopsPlugin m_ShopsPlugin;
 
         public CSellItem(ShopsPlugin shopsPlugin,
-            IServiceProvider serviceProvider) : base(serviceProvider)
+            IStringLocalizer stringLocalizer,
+            IServiceProvider serviceProvider) : base(stringLocalizer, serviceProvider)
         {
             m_ShopsPlugin = shopsPlugin;
         }
 
         protected override async Task ExecuteInteractAsync(string idOrName, int amount)
         {
-            Asset asset = m_ShopsPlugin.GetAsset(EAssetType.ITEM, idOrName);
+            ItemAsset asset = (ItemAsset)m_ShopsPlugin.GetAsset(EAssetType.ITEM, idOrName);
 
             if (asset == null)
             {
-                throw new UserFriendlyException("Item not found");
+                throw new UserFriendlyException(m_StringLocalizer["shops:fail:item_not_found", new { IDOrName = idOrName }]);
             }
 
             ShopSellItem shop = await m_ShopsPlugin.GetSellItemShop(asset.id);
 
             if (shop == null)
             {
-                await User.PrintMessageAsync("Cannot sell this item");
+                await User.PrintMessageAsync(m_StringLocalizer["shops:fail:item_not_for_sell", new { ItemName = asset.itemName, ItemID = asset.id }]);
             }
 
             await shop.Interact(User, amount);

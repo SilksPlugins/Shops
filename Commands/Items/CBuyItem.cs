@@ -1,4 +1,5 @@
-﻿using OpenMod.API.Commands;
+﻿using Microsoft.Extensions.Localization;
+using OpenMod.API.Commands;
 using OpenMod.Core.Commands;
 using SDG.Unturned;
 using Shops.Commands.Actions;
@@ -20,7 +21,8 @@ namespace Shops.Commands.Items
         private readonly ShopsPlugin m_ShopsPlugin;
 
         public CBuyItem(ShopsPlugin shopsPlugin,
-            IServiceProvider serviceProvider) : base(serviceProvider)
+            IStringLocalizer stringLocalizer,
+            IServiceProvider serviceProvider) : base(stringLocalizer, serviceProvider)
         {
             m_ShopsPlugin = shopsPlugin;
         }
@@ -31,14 +33,14 @@ namespace Shops.Commands.Items
 
             if (asset == null)
             {
-                throw new UserFriendlyException("Item not found");
+                throw new UserFriendlyException(m_StringLocalizer["shops:fail:item_not_found", new { IDOrName = idOrName }]);
             }
 
             ShopBuyItem shop = await m_ShopsPlugin.GetBuyItemShop(asset.id);
 
             if (shop == null)
             {
-                await User.PrintMessageAsync("Item not for sale");
+                await User.PrintMessageAsync(m_StringLocalizer["shops:fail:item_not_for_sale", new { ItemName = asset.itemName, ItemID = asset.id } ]);
             }
 
             await shop.Interact(User, amount);

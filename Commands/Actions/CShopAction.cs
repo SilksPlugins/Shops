@@ -1,6 +1,8 @@
 ﻿using Cysharp.Threading.Tasks;
+using Microsoft.Extensions.Localization;
 using OpenMod.API.Commands;
 using OpenMod.Core.Commands;
+using OpenMod.Extensions.Economy.Abstractions;
 using OpenMod.Unturned.Commands;
 using System;
 using System.Threading.Tasks;
@@ -9,9 +11,12 @@ namespace Shops.Commands.Actions
 {
     public abstract class CShopAction : UnturnedCommand
     {
-        protected CShopAction(IServiceProvider serviceProvider) : base(serviceProvider)
-        {
+        protected readonly IStringLocalizer m_StringLocalizer;
 
+        protected CShopAction(IStringLocalizer stringLocalizer,
+            IServiceProvider serviceProvider) : base(serviceProvider)
+        {
+            m_StringLocalizer = stringLocalizer;
         }
 
         protected async override UniTask OnExecuteAsync()
@@ -26,7 +31,7 @@ namespace Shops.Commands.Actions
 
             if (price <= 0)
             {
-                throw new UserFriendlyException("Price must be greater than zero.");
+                throw new UserFriendlyException(m_StringLocalizer["shops:fail:price_above_zero"]);
             }
 
             await ExecuteShopUpdateAsync(identifier, price);

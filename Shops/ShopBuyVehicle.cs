@@ -1,4 +1,5 @@
 ﻿using Cysharp.Threading.Tasks;
+using Microsoft.Extensions.Localization;
 using OpenMod.Extensions.Economy.Abstractions;
 using OpenMod.Unturned.Users;
 using SDG.Unturned;
@@ -9,9 +10,12 @@ namespace Shops.Shops
 {
     public class ShopBuyVehicle : IShop
     {
+        private readonly IStringLocalizer m_StringLocalizer;
         private readonly IEconomyProvider m_EconomyProvider;
 
-        public ShopBuyVehicle(BuyVehicle shop, IEconomyProvider economyProvider)
+        public ShopBuyVehicle(BuyVehicle shop,
+            IStringLocalizer stringLocalizer,
+            IEconomyProvider economyProvider)
         {
             ID = (ushort)shop.ID;
             Price = shop.BuyPrice;
@@ -45,7 +49,16 @@ namespace Shops.Shops
 
             VehicleTool.giveVehicle(user.Player, ID);
 
-            await user.PrintMessageAsync($"Successfully purchased {asset.vehicleName} for ${Price}. Your balance is now ${newBalance}.");
+            await user.PrintMessageAsync(m_StringLocalizer["shops:success:item_buy",
+                new
+                {
+                    VehicleName = asset.vehicleName,
+                    VehicleID = asset.id,
+                    BuyPrice = Price,
+                    Balance = newBalance,
+                    m_EconomyProvider.CurrencyName,
+                    m_EconomyProvider.CurrencySymbol,
+                }]);
         }
     }
 }

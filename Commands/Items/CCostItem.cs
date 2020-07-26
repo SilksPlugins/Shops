@@ -1,6 +1,8 @@
 ﻿using Cysharp.Threading.Tasks;
+using Microsoft.Extensions.Localization;
 using OpenMod.API.Commands;
 using OpenMod.Core.Commands;
+using OpenMod.Extensions.Economy.Abstractions;
 using OpenMod.Unturned.Commands;
 using SDG.Unturned;
 using Shops.Database;
@@ -19,14 +21,20 @@ namespace Shops.Commands.Items
     public class CCostItem : UnturnedCommand
     {
         private readonly ShopsPlugin m_ShopsPlugin;
+        private readonly IStringLocalizer m_StringLocalizer;
         private readonly ShopDbContext m_DbContext;
+        private readonly IEconomyProvider m_EconomyProvider;
 
         public CCostItem(ShopsPlugin shopsPlugin,
+            IStringLocalizer stringLocalizer,
             ShopDbContext dbContext,
+            IEconomyProvider economyProvider,
             IServiceProvider serviceProvider) : base(serviceProvider)
         {
             m_ShopsPlugin = shopsPlugin;
+            m_StringLocalizer = stringLocalizer;
             m_DbContext = dbContext;
+            m_EconomyProvider = economyProvider;
         }
 
         protected override async UniTask OnExecuteAsync()
@@ -37,7 +45,7 @@ namespace Shops.Commands.Items
 
             if (asset == null)
             {
-                throw new UserFriendlyException("Item not found");
+                throw new UserFriendlyException(m_StringLocalizer["shops:fail:item_not_found", new { IDOrName = idOrName }]);
             }
 
             BuyItem buyItem = await m_DbContext.BuyItemShops.FindAsync((int)asset.id);
@@ -45,20 +53,44 @@ namespace Shops.Commands.Items
 
             if (buyItem == null && sellItem == null)
             {
-                await Context.Actor.PrintMessageAsync("No shops exist");
+                await Context.Actor.PrintMessageAsync(m_StringLocalizer["shops:success:item_cost_none", new { ItemName = asset.itemName, ItemID = asset.id }]);
             }
             else if (buyItem != null && sellItem == null)
             {
-                await Context.Actor.PrintMessageAsync($"Buy item {asset.itemName} for {buyItem.BuyPrice}");
+                await Context.Actor.PrintMessageAsync(m_StringLocalizer["shops:success:item_cost_buy",
+                    new
+                    {
+                        ItemName = asset.itemName,
+                        ItemID = asset.id,
+                        buyItem.BuyPrice,
+                        m_EconomyProvider.CurrencyName,
+                        m_EconomyProvider.CurrencySymbol
+                    }]);
             }
             else if (buyItem == null && sellItem != null)
             {
-                await Context.Actor.PrintMessageAsync($"Sell item {asset.itemName} for {sellItem.SellPrice}");
+                await Context.Actor.PrintMessageAsync(m_StringLocalizer["shops:success:item_cost_sell",
+                    new
+                    {
+                        ItemName = asset.itemName,
+                        ItemID = asset.id,
+                        sellItem.SellPrice,
+                        m_EconomyProvider.CurrencyName,
+                        m_EconomyProvider.CurrencySymbol
+                    }]);
             }
             else
             {
-                await Context.Actor.PrintMessageAsync($"Buy item {asset.itemName} for {buyItem.BuyPrice}");
-                await Context.Actor.PrintMessageAsync($"Sell item {asset.itemName} for {sellItem.SellPrice}");
+                await Context.Actor.PrintMessageAsync(m_StringLocalizer["shops:success:item_cost_buy_sell",
+                    new
+                    {
+                        ItemName = asset.itemName,
+                        ItemID = asset.id,
+                        buyItem.BuyPrice,
+                        sellItem.SellPrice,
+                        m_EconomyProvider.CurrencyName,
+                        m_EconomyProvider.CurrencySymbol
+                    }]);
             }
         }
     }

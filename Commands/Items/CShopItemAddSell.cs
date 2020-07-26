@@ -1,5 +1,7 @@
-﻿using OpenMod.API.Commands;
+﻿using Microsoft.Extensions.Localization;
+using OpenMod.API.Commands;
 using OpenMod.Core.Commands;
+using OpenMod.Extensions.Economy.Abstractions;
 using SDG.Unturned;
 using Shops.Commands.Actions;
 using Shops.Database;
@@ -18,13 +20,17 @@ namespace Shops.Commands.Items
     {
         private readonly ShopsPlugin m_ShopsPlugin;
         private readonly ShopDbContext m_DbContext;
+        private readonly IEconomyProvider m_EconomyProvider;
 
         public CShopItemAddSell(ShopsPlugin shopsPlugin,
+            IStringLocalizer stringLocalizer,
             ShopDbContext dbContext,
-            IServiceProvider serviceProvider) : base(serviceProvider)
+            IEconomyProvider economyProvider,
+            IServiceProvider serviceProvider) : base(stringLocalizer, serviceProvider)
         {
             m_ShopsPlugin = shopsPlugin;
             m_DbContext = dbContext;
+            m_EconomyProvider = economyProvider;
         }
 
         protected override async Task ExecuteShopUpdateAsync(string idOrName, decimal price)
@@ -33,14 +39,22 @@ namespace Shops.Commands.Items
 
             if (asset == null)
             {
-                throw new UserFriendlyException("Item not found");
+                throw new UserFriendlyException(m_StringLocalizer["shops:fail:item_not_found", new { IDOrName = idOrName }]);
             }
 
             SellItem shop = await m_DbContext.SellItemShops.FindAsync((int)asset.id);
 
             if (shop != null)
             {
-                throw new UserFriendlyException("Shop already exists");
+                throw new UserFriendlyException(m_StringLocalizer["shops:fail:item_sell_shop_already_exists",
+                    new
+                    {
+                        ItemName = asset.itemName,
+                        ItemID = asset.id,
+                        shop.SellPrice,
+                        m_EconomyProvider.CurrencyName,
+                        m_EconomyProvider.CurrencySymbol
+                    }]);
             }
 
             shop = new SellItem()
@@ -53,7 +67,15 @@ namespace Shops.Commands.Items
 
             await m_DbContext.SaveChangesAsync();
 
-            await Context.Actor.PrintMessageAsync("Added shop");
+            await Context.Actor.PrintMessageAsync(m_StringLocalizer["shops:success:item_sell_shop_added",
+                new
+                {
+                    ItemName = asset.itemName,
+                    ItemID = asset.id,
+                    shop.SellPrice,
+                    m_EconomyProvider.CurrencyName,
+                    m_EconomyProvider.CurrencySymbol
+                }]);
         }
     }
 }

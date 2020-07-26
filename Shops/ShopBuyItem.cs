@@ -1,4 +1,5 @@
 ﻿using Cysharp.Threading.Tasks;
+using Microsoft.Extensions.Localization;
 using OpenMod.Extensions.Economy.Abstractions;
 using OpenMod.Unturned.Users;
 using SDG.Unturned;
@@ -9,13 +10,17 @@ namespace Shops.Shops
 {
     public class ShopBuyItem : IShop
     {
+        private readonly IStringLocalizer m_StringLocalizer;
         private readonly IEconomyProvider m_EconomyProvider;
 
-        public ShopBuyItem(BuyItem shop, IEconomyProvider economyProvider)
+        public ShopBuyItem(BuyItem shop,
+            IStringLocalizer stringLocalizer,
+            IEconomyProvider economyProvider)
         {
             ID = (ushort)shop.ID;
             Price = shop.BuyPrice;
 
+            m_StringLocalizer = stringLocalizer;
             m_EconomyProvider = economyProvider;
         }
 
@@ -47,7 +52,17 @@ namespace Shops.Shops
                 user.Player.inventory.forceAddItem(item, true);
             }
 
-            await user.PrintMessageAsync($"Successfully purchased {amount} {asset.itemName} for ${totalPrice}. Your balance is now ${newBalance}.");
+            await user.PrintMessageAsync(m_StringLocalizer["shops:success:item_buy",
+                new
+                {
+                    ItemName = asset.itemName,
+                    ItemID = asset.id,
+                    Amount = amount,
+                    BuyPrice = totalPrice,
+                    Balance = newBalance,
+                    m_EconomyProvider.CurrencyName,
+                    m_EconomyProvider.CurrencySymbol,
+                }]);
         }
     }
 }

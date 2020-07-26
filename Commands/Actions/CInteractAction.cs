@@ -1,4 +1,5 @@
 ﻿using Cysharp.Threading.Tasks;
+using Microsoft.Extensions.Localization;
 using OpenMod.API.Commands;
 using OpenMod.Core.Commands;
 using OpenMod.Unturned.Commands;
@@ -11,11 +12,14 @@ namespace Shops.Commands.Actions
     [CommandActor(typeof(UnturnedUser))]
     public abstract class CInteractAction : UnturnedCommand
     {
+        protected readonly IStringLocalizer m_StringLocalizer;
+
         public UnturnedUser User => (UnturnedUser)Context.Actor;
 
-        protected CInteractAction(IServiceProvider serviceProvider) : base(serviceProvider)
+        protected CInteractAction(IStringLocalizer stringLocalizer,
+            IServiceProvider serviceProvider) : base(serviceProvider)
         {
-
+            m_StringLocalizer = stringLocalizer;
         }
 
         protected async override UniTask OnExecuteAsync()
@@ -34,7 +38,7 @@ namespace Shops.Commands.Actions
 
                 if (amount <= 0)
                 {
-                    throw new UserFriendlyException("Amount must be greater than zero.");
+                    throw new UserFriendlyException(m_StringLocalizer["shops:fail:amount_above_zero"]);
                 }
             }
 

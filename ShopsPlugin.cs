@@ -1,5 +1,6 @@
 ﻿using Cysharp.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging;
 using OpenMod.API.Plugins;
 using OpenMod.EntityFrameworkCore.Extensions;
@@ -19,15 +20,18 @@ namespace Shops
     {
         private readonly ShopDbContext m_DbContext;
         private readonly ILogger<ShopsPlugin> m_Logger;
+        private readonly IStringLocalizer m_StringLocalizer;
         private readonly IServiceProvider m_ServiceProvider;
 
         public ShopsPlugin(
             ShopDbContext dbContext,
             ILogger<ShopsPlugin> logger,
+            IStringLocalizer stringLocalizer,
             IServiceProvider serviceProvider) : base(serviceProvider)
         {
             m_DbContext = dbContext;
             m_Logger = logger;
+            m_StringLocalizer = stringLocalizer;
             m_ServiceProvider = serviceProvider;
         }
 
@@ -35,12 +39,12 @@ namespace Shops
         {
             await m_DbContext.OpenModMigrateAsync();
 
-            m_Logger.LogInformation("Shops database has been loaded.");
+            m_Logger.LogInformation(m_StringLocalizer["shops:logs:plugin_loaded"]);
         }
 
         protected override async UniTask OnUnloadAsync()
         {
-            m_Logger.LogInformation("Shops unloaded.");
+            m_Logger.LogInformation(m_StringLocalizer["shops:logs:plugin_unloaded"]);
         }
 
         public Asset GetAsset(EAssetType type, string idOrName)
@@ -71,7 +75,7 @@ namespace Shops
 
             if (asset == null)
             {
-                m_Logger.LogDebug($"Asset not found ({idOrName})");
+                m_Logger.LogDebug(m_StringLocalizer["shops:logs:asset_not_found", new { IDOrName = idOrName }]);
             }
 
             return asset;

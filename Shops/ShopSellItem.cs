@@ -1,4 +1,6 @@
 ﻿using Cysharp.Threading.Tasks;
+using Microsoft.Extensions.Localization;
+using OpenMod.API.Commands;
 using OpenMod.Extensions.Economy.Abstractions;
 using OpenMod.Unturned.Users;
 using SDG.Unturned;
@@ -10,13 +12,17 @@ namespace Shops.Shops
 {
     public class ShopSellItem : IShop
     {
+        private readonly IStringLocalizer m_StringLocalizer;
         private readonly IEconomyProvider m_EconomyProvider;
 
-        public ShopSellItem(SellItem shop, IEconomyProvider economyProvider)
+        public ShopSellItem(SellItem shop,
+            IStringLocalizer stringLocalizer,
+            IEconomyProvider economyProvider)
         {
             ID = (ushort)shop.ID;
             Price = shop.SellPrice;
 
+            m_StringLocalizer = stringLocalizer;
             m_EconomyProvider = economyProvider;
         }
 
@@ -30,19 +36,23 @@ namespace Shops.Shops
 
             decimal totalPrice = Price * amount;
 
-            List<InventorySearch> foundItems = user.Player.inventory.search(ID, true, true);
-
-            if (foundItems.Count < amount)
-            {
-                await user.PrintMessageAsync("You do not have enough of this item.");
-                return;
-            }
-
             ItemAsset asset = (ItemAsset)Assets.find(EAssetType.ITEM, ID);
 
             if (asset == null)
             {
                 throw new Exception($"Item asset for ID '{ID}' not found");
+            }
+
+            List<InventorySearch> foundItems = user.Player.inventory.search(ID, true, true);
+
+            if (foundItems.Count < amount)
+            {
+                throw new UserFriendlyException(m_StringLocalizer["item_sell_not_enough", new
+                {
+                    ItemName = asset.itemName,
+                    ItemID = asset.id,
+                    Amount = amount
+                }]);
             }
 
             await UniTask.SwitchToMainThread();
@@ -58,7 +68,17 @@ namespace Shops.Shops
 
             decimal newBalance = await m_EconomyProvider.UpdateBalanceAsync(user.Id, user.Type, totalPrice);
 
-            await user.PrintMessageAsync($"Successfully sold {amount} {asset.itemName} for ${totalPrice}. Your balance is now ${newBalance}.");
+            await user.PrintMessageAsync(m_StringLocalizer["shops:success:item_sell",
+                new
+                {
+                    ItemName = asset.itemName,
+                    ItemID = asset.id,
+                    Amount = amount,
+                    SellPrice = totalPrice,
+                    Balance = newBalance,
+                    m_EconomyProvider.CurrencyName,
+                    m_EconomyProvider.CurrencySymbol,
+                }]);
         }
     }
 }

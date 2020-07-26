@@ -1,4 +1,5 @@
 ﻿using Cysharp.Threading.Tasks;
+using Microsoft.Extensions.Localization;
 using OpenMod.API.Commands;
 using OpenMod.Core.Commands;
 using OpenMod.Unturned.Commands;
@@ -18,13 +19,16 @@ namespace Shops.Commands.Vehicles
     public class CShopVehicleRemove : UnturnedCommand
     {
         private readonly ShopsPlugin m_ShopsPlugin;
+        private readonly IStringLocalizer m_StringLocalizer;
         private readonly ShopDbContext m_DbContext;
 
         public CShopVehicleRemove(ShopsPlugin shopsPlugin,
+            IStringLocalizer stringLocalizer,
             ShopDbContext dbContext,
             IServiceProvider serviceProvider) : base(serviceProvider)
         {
             m_ShopsPlugin = shopsPlugin;
+            m_StringLocalizer = stringLocalizer;
             m_DbContext = dbContext;
         }
 
@@ -37,25 +41,25 @@ namespace Shops.Commands.Vehicles
 
             string idOrName = await Context.Parameters.GetAsync<string>(0);
 
-            ItemAsset asset = (ItemAsset)m_ShopsPlugin.GetAsset(EAssetType.ITEM, idOrName);
+            VehicleAsset asset = (VehicleAsset)m_ShopsPlugin.GetAsset(EAssetType.VEHICLE, idOrName);
 
             if (asset == null)
             {
-                throw new UserFriendlyException("Vehicle not found");
+                throw new UserFriendlyException(m_StringLocalizer["vehicle_not_found", new { IDOrName = idOrName }]);
             }
 
             BuyVehicle shop = await m_DbContext.BuyVehicleShops.FindAsync((int)asset.id);
 
             if (shop == null)
             {
-                throw new UserFriendlyException("Shop doesn't exist");
+                throw new UserFriendlyException(m_StringLocalizer["shops:fail:vehicle_buy_shop_doesnt_exist", new { VehicleName = asset.vehicleName, VehicleID = asset.id }]);
             }
 
             m_DbContext.BuyVehicleShops.Remove(shop);
 
             await m_DbContext.SaveChangesAsync();
 
-            await Context.Actor.PrintMessageAsync("Removed shop");
+            throw new UserFriendlyException(m_StringLocalizer["shops:success:vehicle_buy_shop_removed", new { VehicleName = asset.vehicleName, VehicleID = asset.id }]);
         }
     }
 }
