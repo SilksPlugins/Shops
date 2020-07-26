@@ -41,12 +41,20 @@ namespace Shops.Commands.Vehicles
 
             if (shop == null)
             {
-                throw new UserFriendlyException("Shop doesn't exist");
+                shop = new BuyVehicle()
+                {
+                    ID = asset.id,
+                    BuyPrice = price
+                };
+
+                await m_DbContext.BuyVehicleShops.AddAsync(shop);
             }
+            else
+            {
+                shop.BuyPrice = price;
 
-            shop.BuyPrice = price;
-
-            m_DbContext.BuyVehicleShops.Update(shop);
+                m_DbContext.BuyVehicleShops.Update(shop);
+            }
 
             await m_DbContext.SaveChangesAsync();
 

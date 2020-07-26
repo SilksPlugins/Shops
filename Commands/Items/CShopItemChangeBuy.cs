@@ -40,12 +40,20 @@ namespace Shops.Commands.Items
 
             if (shop == null)
             {
-                throw new UserFriendlyException("Shop doesn't exist");
+                shop = new BuyItem()
+                {
+                    ID = asset.id,
+                    BuyPrice = price
+                };
+
+                await m_DbContext.BuyItemShops.AddAsync(shop);
             }
+            else
+            {
+                shop.BuyPrice = price;
 
-            shop.BuyPrice = price;
-
-            m_DbContext.BuyItemShops.Update(shop);
+                m_DbContext.BuyItemShops.Update(shop);
+            }
 
             await m_DbContext.SaveChangesAsync();
 
