@@ -9,13 +9,12 @@ using Shops.Database;
 using Shops.Database.Models;
 using System;
 
-namespace Shops.Commands.Items
+namespace Shops.Commands.Vehicles
 {
-    [Command("cost")]
+    [Command("costv")]
     [CommandAlias("vcost")]
-    [CommandAlias("costv")]
-    [CommandAlias("vehiclecost")]
     [CommandAlias("costvehicle")]
+    [CommandAlias("vehiclecost")]
     [CommandDescription("Views the cost of the specified vehicle")]
     [CommandSyntax("<id or name>")]
     public class CCostVehicle : UnturnedCommand

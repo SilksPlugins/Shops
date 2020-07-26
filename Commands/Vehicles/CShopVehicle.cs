@@ -5,10 +5,10 @@ using System;
 
 namespace Shops.Commands.Vehicles
 {
-    [Command("vshop")]
-    [CommandAlias("shopv")]
-    [CommandAlias("vehicleshop")]
+    [Command("shopv")]
+    [CommandAlias("vshop")]
     [CommandAlias("shopvehicle")]
+    [CommandAlias("vehicleshop")]
     [CommandDescription("Manages vehicle shops")]
     [CommandSyntax("<[a]dd/[r]emove/[c]hange>")]
     public class CShopVehicle : UnturnedCommand
