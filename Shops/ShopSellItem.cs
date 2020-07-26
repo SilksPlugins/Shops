@@ -57,8 +57,10 @@ namespace Shops.Shops
 
             await UniTask.SwitchToMainThread();
 
-            foreach (InventorySearch found in foundItems)
+            for (int i = 0; i < amount; i++)
             {
+                InventorySearch found = foundItems[i];
+
                 byte index = user.Player.inventory.getIndex(found.page, found.jar.x, found.jar.y);
 
                 user.Player.inventory.removeItem(found.page, index);
