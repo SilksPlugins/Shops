@@ -3,6 +3,11 @@ shops:
     plugin_loaded: "Shops database has been loaded"
     plugin_unloaded: "Shops unloaded"
     asset_not_found: "Asset not found ({IDOrName})"
+  disabled:
+    item_buy: "Purchasing items is disabled."
+    item_sell: "Selling items is disabled."
+    vehicle_buy: "Purchasing vehicles is disabled."
+    vehicle_sell: "Selling vehicles is disabled."
   fail:
     item_not_found: "The item '{IDOrName}' cannot be found."
     item_not_for_sale: "{ItemName} cannot be purchased."

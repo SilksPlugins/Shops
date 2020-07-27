@@ -29,6 +29,8 @@ namespace Shops.Commands.Items
 
         protected override async Task ExecuteInteractAsync(string idOrName, int amount)
         {
+            m_ShopsPlugin.AssertCanBuyItems();
+
             ItemAsset asset = (ItemAsset)m_ShopsPlugin.GetAsset(EAssetType.ITEM, idOrName);
 
             if (asset == null)

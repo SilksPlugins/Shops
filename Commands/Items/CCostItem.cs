@@ -48,8 +48,18 @@ namespace Shops.Commands.Items
                 throw new UserFriendlyException(m_StringLocalizer["shops:fail:item_not_found", new { IDOrName = idOrName }]);
             }
 
-            BuyItem buyItem = await m_DbContext.BuyItemShops.FindAsync((int)asset.id);
-            SellItem sellItem = await m_DbContext.SellItemShops.FindAsync((int)asset.id);
+            BuyItem buyItem = null;
+            SellItem sellItem = null;
+
+            if (m_ShopsPlugin.CanBuyItems)
+            {
+                buyItem = await m_DbContext.BuyItemShops.FindAsync((int)asset.id);
+
+            }
+            if (m_ShopsPlugin.CanSellItems)
+            {
+                sellItem = await m_DbContext.SellItemShops.FindAsync((int)asset.id);
+            }
 
             if (buyItem == null && sellItem == null)
             {

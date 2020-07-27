@@ -28,6 +28,8 @@ namespace Shops.Commands.Vehicles
 
         protected override async Task ExecuteInteractAsync(string idOrName, int amount)
         {
+            m_ShopsPlugin.AssertCanBuyVehicles();
+
             if (amount != 1)
             {
                 throw new UserFriendlyException(m_StringLocalizer["vehicle_amount_one"]);

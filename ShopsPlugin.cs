@@ -1,7 +1,9 @@
 ﻿using Cysharp.Threading.Tasks;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging;
+using OpenMod.API.Commands;
 using OpenMod.API.Plugins;
 using OpenMod.EntityFrameworkCore.Extensions;
 using OpenMod.Unturned.Plugins;
@@ -20,20 +22,29 @@ namespace Shops
     {
         private readonly ShopDbContext m_DbContext;
         private readonly ILogger<ShopsPlugin> m_Logger;
+        private readonly IConfiguration m_Configuration;
         private readonly IStringLocalizer m_StringLocalizer;
         private readonly IServiceProvider m_ServiceProvider;
 
         public ShopsPlugin(
             ShopDbContext dbContext,
             ILogger<ShopsPlugin> logger,
+            IConfiguration configuration,
             IStringLocalizer stringLocalizer,
             IServiceProvider serviceProvider) : base(serviceProvider)
         {
             m_DbContext = dbContext;
             m_Logger = logger;
+            m_Configuration = configuration;
             m_StringLocalizer = stringLocalizer;
             m_ServiceProvider = serviceProvider;
         }
+
+        public bool CanBuyItems => m_Configuration.GetSection("shops:canbuyitems").Get<bool>();
+        public bool CanSellItems => m_Configuration.GetSection("shops:cansellitems").Get<bool>();
+        public bool CanBuyVehicles => m_Configuration.GetSection("shops:canbuyvehicles").Get<bool>();
+        public bool CanSellVehicles => m_Configuration.GetSection("shops:cansellvehicles").Get<bool>();
+        public bool QualityCounts => m_Configuration.GetSection("shops:qualitycounts").Get<bool>();
 
         protected override async UniTask OnLoadAsync()
         {
@@ -106,6 +117,38 @@ namespace Shops
             if (shop == null) return null;
 
             return ActivatorUtilities.CreateInstance<ShopBuyVehicle>(m_ServiceProvider, shop);
+        }
+
+        public void AssertCanBuyItems()
+        {
+            if (!CanBuyItems)
+            {
+                throw new UserFriendlyException(m_StringLocalizer["shops:disabled:item_buy"]);
+            }
+        }
+
+        public void AssertCanSellItems()
+        {
+            if (!CanSellItems)
+            {
+                throw new UserFriendlyException(m_StringLocalizer["shops:disabled:item_sell"]);
+            }
+        }
+
+        public void AssertCanBuyVehicles()
+        {
+            if (!CanBuyVehicles)
+            {
+                throw new UserFriendlyException(m_StringLocalizer["shops:disabled:vehicle_buy"]);
+            }
+        }
+
+        public void AssertCanSellVehicles()
+        {
+            if (!CanSellVehicles)
+            {
+                throw new UserFriendlyException(m_StringLocalizer["shops:disabled:vehicle_sell"]);
+            }
         }
     }
 }

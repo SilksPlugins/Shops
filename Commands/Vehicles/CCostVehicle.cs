@@ -47,7 +47,12 @@ namespace Shops.Commands.Vehicles
                 throw new UserFriendlyException(m_StringLocalizer["vehicle_not_found", new { IDOrName = idOrName }]);
             }
 
-            BuyVehicle buyVehicle = await m_DbContext.BuyVehicleShops.FindAsync((int)asset.id);
+            BuyVehicle buyVehicle = null;
+
+            if (m_ShopsPlugin.CanBuyVehicles)
+            {
+                buyVehicle = await m_DbContext.BuyVehicleShops.FindAsync((int)asset.id);
+            }
 
             if (buyVehicle == null)
             {
