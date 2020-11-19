@@ -1,27 +1,35 @@
 ﻿using Cysharp.Threading.Tasks;
 using Microsoft.Extensions.Localization;
+using OpenMod.API.Eventing;
 using OpenMod.Extensions.Economy.Abstractions;
 using OpenMod.Unturned.Users;
 using SDG.Unturned;
 using Shops.Database.Models;
+using Shops.Events;
 using System;
 
 namespace Shops.Shops
 {
     public class ShopBuyItem : IShop
     {
+        private readonly ShopsPlugin m_ShopsPlugin;
         private readonly IStringLocalizer m_StringLocalizer;
         private readonly IEconomyProvider m_EconomyProvider;
+        private readonly IEventBus m_EventBus;
 
         public ShopBuyItem(BuyItem shop,
+            ShopsPlugin shopsPlugin,
             IStringLocalizer stringLocalizer,
-            IEconomyProvider economyProvider)
+            IEconomyProvider economyProvider,
+            IEventBus eventBus)
         {
             ID = (ushort)shop.ID;
             Price = shop.BuyPrice;
 
+            m_ShopsPlugin = shopsPlugin;
             m_StringLocalizer = stringLocalizer;
             m_EconomyProvider = economyProvider;
+            m_EventBus = eventBus;
         }
 
         public ushort ID;
@@ -41,7 +49,12 @@ namespace Shops.Shops
                 throw new Exception($"Item asset for ID '{ID}' not found");
             }
 
-            newBalance = await m_EconomyProvider.UpdateBalanceAsync(user.Id, user.Type, -totalPrice);
+            var buyingEvent = new PlayerBuyingItemEvent(user, ID, amount, Price);
+            await m_EventBus.EmitAsync(m_ShopsPlugin, this, buyingEvent);
+
+            if (buyingEvent.IsCancelled) return;
+
+            newBalance = await m_EconomyProvider.UpdateBalanceAsync(user.Id, user.Type, -totalPrice, $"Purchase of {amount} {asset.itemName}s");
 
             await UniTask.SwitchToMainThread();
 
@@ -63,6 +76,9 @@ namespace Shops.Shops
                     m_EconomyProvider.CurrencyName,
                     m_EconomyProvider.CurrencySymbol,
                 }]);
+
+            var boughtEvent = new PlayerBoughtItemEvent(user, ID, amount, Price);
+            await m_EventBus.EmitAsync(m_ShopsPlugin, this, boughtEvent);
         }
     }
 }

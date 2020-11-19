@@ -1,10 +1,12 @@
 ﻿using Cysharp.Threading.Tasks;
 using Microsoft.Extensions.Localization;
 using OpenMod.API.Commands;
+using OpenMod.API.Eventing;
 using OpenMod.Extensions.Economy.Abstractions;
 using OpenMod.Unturned.Users;
 using SDG.Unturned;
 using Shops.Database.Models;
+using Shops.Events;
 using System;
 using System.Collections.Generic;
 
@@ -12,18 +14,24 @@ namespace Shops.Shops
 {
     public class ShopSellItem : IShop
     {
+        private readonly ShopsPlugin m_ShopsPlugin;
         private readonly IStringLocalizer m_StringLocalizer;
         private readonly IEconomyProvider m_EconomyProvider;
+        private readonly IEventBus m_EventBus;
 
         public ShopSellItem(SellItem shop,
+            ShopsPlugin shopsPlugin,
             IStringLocalizer stringLocalizer,
-            IEconomyProvider economyProvider)
+            IEconomyProvider economyProvider,
+            IEventBus eventBus)
         {
             ID = (ushort)shop.ID;
             Price = shop.SellPrice;
 
+            m_ShopsPlugin = shopsPlugin;
             m_StringLocalizer = stringLocalizer;
             m_EconomyProvider = economyProvider;
+            m_EventBus = eventBus;
         }
 
         public ushort ID;
@@ -42,6 +50,11 @@ namespace Shops.Shops
             {
                 throw new Exception($"Item asset for ID '{ID}' not found");
             }
+
+            var sellingEvent = new PlayerSellingItemEvent(user, ID, amount, Price);
+            await m_EventBus.EmitAsync(m_ShopsPlugin, this, sellingEvent);
+
+            if (sellingEvent.IsCancelled) return;
 
             await UniTask.SwitchToMainThread();
 
@@ -68,7 +81,7 @@ namespace Shops.Shops
 
             await UniTask.SwitchToThreadPool();
 
-            decimal newBalance = await m_EconomyProvider.UpdateBalanceAsync(user.Id, user.Type, totalPrice);
+            decimal newBalance = await m_EconomyProvider.UpdateBalanceAsync(user.Id, user.Type, totalPrice, $"Sold {amount} {asset.itemName}s");
 
             await user.PrintMessageAsync(m_StringLocalizer["shops:success:item_sell",
                 new
@@ -81,6 +94,9 @@ namespace Shops.Shops
                     m_EconomyProvider.CurrencyName,
                     m_EconomyProvider.CurrencySymbol,
                 }]);
+
+            var soldEvent = new PlayerSoldItemEvent(user, ID, amount, Price);
+            await m_EventBus.EmitAsync(m_ShopsPlugin, this, soldEvent);
         }
     }
 }
