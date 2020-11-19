@@ -13,8 +13,14 @@ namespace Shops
             IConfiguration configuration,
             ContainerBuilder containerBuilder)
         {
-            containerBuilder.AddEntityFrameworkCoreMySql();
-            containerBuilder.AddDbContext<ShopDbContext>();
+
+        }
+
+        public void ConfigureContainer(IPluginServiceConfigurationContext context)
+        {
+            context.ContainerBuilder
+                .AddEntityFrameworkCoreMySql()
+                .AddDbContext<ShopDbContext>();
         }
     }
 }
