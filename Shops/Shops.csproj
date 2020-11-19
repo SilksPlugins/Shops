@@ -22,6 +22,10 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies.net461" Version="1.0.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
     <PackageReference Include="OpenMod.EntityFrameworkCore" Version="2.3.7" />
     <PackageReference Include="OpenMod.Extensions.Economy.Abstractions" Version="2.3.7" />
     <PackageReference Include="OpenMod.Unturned" Version="2.3.7" />
