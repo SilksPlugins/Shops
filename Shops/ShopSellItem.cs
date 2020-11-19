@@ -43,6 +43,8 @@ namespace Shops.Shops
                 throw new Exception($"Item asset for ID '{ID}' not found");
             }
 
+            await UniTask.SwitchToMainThread();
+
             List<InventorySearch> foundItems = user.Player.Player.inventory.search(ID, true, true);
 
             if (foundItems.Count < amount)
@@ -54,8 +56,6 @@ namespace Shops.Shops
                     Amount = amount
                 }]);
             }
-
-            await UniTask.SwitchToMainThread();
 
             for (int i = 0; i < amount; i++)
             {
