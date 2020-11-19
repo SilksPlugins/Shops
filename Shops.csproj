@@ -18,6 +18,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="3.1.10">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
     <PackageReference Include="OpenMod.EntityFrameworkCore" Version="2.3.7" />
     <PackageReference Include="OpenMod.Extensions.Economy.Abstractions" Version="2.3.7" />
     <PackageReference Include="OpenMod.Unturned" Version="2.3.7" />
