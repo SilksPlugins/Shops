@@ -1,9 +1,9 @@
 database:
   ConnectionStrings:
     default: "Server=127.0.0.1; Database=openmod; Port=3306; User=root; Password=password" # See https://www.connectionstrings.com/mysql/ for more information on making ConnectionStrings
-shops:
-  canbuyitems: true
-  cansellitems: true
-  canbuyvehicles: true
-  cansellvehicles: true #not yet implemented
-  qualitycounts: true #not yet implemented
+Shops:
+  CanBuyItems: true
+  CanSellItems: true
+  CanBuyVehicles: true
+  CanSellVehicles: true #not yet implemented
+  QualityCounts: true #not yet implemented

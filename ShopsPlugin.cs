@@ -40,11 +40,11 @@ namespace Shops
             m_ServiceProvider = serviceProvider;
         }
 
-        public bool CanBuyItems => m_Configuration.GetSection("shops:canbuyitems").Get<bool>();
-        public bool CanSellItems => m_Configuration.GetSection("shops:cansellitems").Get<bool>();
-        public bool CanBuyVehicles => m_Configuration.GetSection("shops:canbuyvehicles").Get<bool>();
-        public bool CanSellVehicles => m_Configuration.GetSection("shops:cansellvehicles").Get<bool>();
-        public bool QualityCounts => m_Configuration.GetSection("shops:qualitycounts").Get<bool>();
+        public bool CanBuyItems => m_Configuration.GetSection("Shops:CanBuyItems").Get<bool>();
+        public bool CanSellItems => m_Configuration.GetSection("Shops:CanSellItems").Get<bool>();
+        public bool CanBuyVehicles => m_Configuration.GetSection("Shops:CanBuyVehicles").Get<bool>();
+        public bool CanSellVehicles => m_Configuration.GetSection("Shops:CanSellVehicles").Get<bool>();
+        public bool QualityCounts => m_Configuration.GetSection("Shops:QualityCounts").Get<bool>();
 
         protected override async UniTask OnLoadAsync()
         {
