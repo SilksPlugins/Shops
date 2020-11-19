@@ -44,21 +44,21 @@ namespace Shops.Commands.Items
 
             if (asset == null)
             {
-                throw new UserFriendlyException(m_StringLocalizer["shops:fail:item_not_found", new { IDOrName = idOrName }]);
+                throw new UserFriendlyException(m_StringLocalizer["shops:fail:item_not_found", new { IdOrName = idOrName }]);
             }
 
             BuyItem shop = await m_DbContext.BuyItemShops.FindAsync((int)asset.id);
 
             if (shop == null)
             {
-                throw new UserFriendlyException(m_StringLocalizer["shops:fail:item_buy_shop_doesnt_exist", new { ItemName = asset.itemName, ItemID = asset.id }]);
+                throw new UserFriendlyException(m_StringLocalizer["shops:fail:item_buy_shop_doesnt_exist", new { ItemName = asset.itemName, ItemId = asset.id }]);
             }
 
             m_DbContext.BuyItemShops.Remove(shop);
 
             await m_DbContext.SaveChangesAsync();
 
-            throw new UserFriendlyException(m_StringLocalizer["shops:success:item_buy_shop_removed", new { ItemName = asset.itemName, ItemID = asset.id }]);
+            throw new UserFriendlyException(m_StringLocalizer["shops:success:item_buy_shop_removed", new { ItemName = asset.itemName, ItemId = asset.id }]);
         }
     }
 }

@@ -25,7 +25,7 @@ namespace Shops.Shops
             IEconomyProvider economyProvider,
             IEventBus eventBus)
         {
-            ID = (ushort)shop.ID;
+            Id = (ushort)shop.Id;
             Price = shop.SellPrice;
 
             m_ShopsPlugin = shopsPlugin;
@@ -34,7 +34,7 @@ namespace Shops.Shops
             m_EventBus = eventBus;
         }
 
-        public ushort ID;
+        public ushort Id;
 
         public decimal Price;
 
@@ -44,28 +44,28 @@ namespace Shops.Shops
 
             decimal totalPrice = Price * amount;
 
-            ItemAsset asset = (ItemAsset)Assets.find(EAssetType.ITEM, ID);
+            ItemAsset asset = (ItemAsset)Assets.find(EAssetType.ITEM, Id);
 
             if (asset == null)
             {
-                throw new Exception($"Item asset for ID '{ID}' not found");
+                throw new Exception($"Item asset for Id '{Id}' not found");
             }
 
-            var sellingEvent = new PlayerSellingItemEvent(user, ID, amount, Price);
+            var sellingEvent = new PlayerSellingItemEvent(user, Id, amount, Price);
             await m_EventBus.EmitAsync(m_ShopsPlugin, this, sellingEvent);
 
             if (sellingEvent.IsCancelled) return;
 
             await UniTask.SwitchToMainThread();
 
-            List<InventorySearch> foundItems = user.Player.Player.inventory.search(ID, true, true);
+            List<InventorySearch> foundItems = user.Player.Player.inventory.search(Id, true, true);
 
             if (foundItems.Count < amount)
             {
                 throw new UserFriendlyException(m_StringLocalizer["item_sell_not_enough", new
                 {
                     ItemName = asset.itemName,
-                    ItemID = asset.id,
+                    ItemId = asset.id,
                     Amount = amount
                 }]);
             }
@@ -87,7 +87,7 @@ namespace Shops.Shops
                 new
                 {
                     ItemName = asset.itemName,
-                    ItemID = asset.id,
+                    ItemId = asset.id,
                     Amount = amount,
                     SellPrice = totalPrice,
                     Balance = newBalance,
@@ -95,7 +95,7 @@ namespace Shops.Shops
                     m_EconomyProvider.CurrencySymbol,
                 }]);
 
-            var soldEvent = new PlayerSoldItemEvent(user, ID, amount, Price);
+            var soldEvent = new PlayerSoldItemEvent(user, Id, amount, Price);
             await m_EventBus.EmitAsync(m_ShopsPlugin, this, soldEvent);
         }
     }

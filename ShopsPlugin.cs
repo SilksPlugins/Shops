@@ -86,7 +86,7 @@ namespace Shops
 
             if (asset == null)
             {
-                m_Logger.LogDebug(m_StringLocalizer["shops:logs:asset_not_found", new { IDOrName = idOrName }]);
+                m_Logger.LogDebug(m_StringLocalizer["shops:logs:asset_not_found", new { IdOrName = idOrName }]);
             }
 
             return asset;

@@ -2,7 +2,7 @@
 {
     public class BuyVehicle
     {
-        public int ID { get; set; }
+        public int Id { get; set; }
 
         public decimal BuyPrice { get; set; }
     }

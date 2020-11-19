@@ -44,7 +44,7 @@ namespace Shops.Commands.Vehicles
 
             if (asset == null)
             {
-                throw new UserFriendlyException(m_StringLocalizer["vehicle_not_found", new { IDOrName = idOrName }]);
+                throw new UserFriendlyException(m_StringLocalizer["vehicle_not_found", new { IdOrName = idOrName }]);
             }
 
             BuyVehicle buyVehicle = null;
@@ -56,7 +56,7 @@ namespace Shops.Commands.Vehicles
 
             if (buyVehicle == null)
             {
-                await Context.Actor.PrintMessageAsync(m_StringLocalizer["shops:success:vehicle_cost_none", new { VehicleName = asset.vehicleName, VehicleID = asset.id }]);
+                await Context.Actor.PrintMessageAsync(m_StringLocalizer["shops:success:vehicle_cost_none", new { VehicleName = asset.vehicleName, VehicleId = asset.id }]);
             }
             else
             {

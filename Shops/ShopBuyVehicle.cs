@@ -23,7 +23,7 @@ namespace Shops.Shops
             IEconomyProvider economyProvider,
             IEventBus eventBus)
         {
-            ID = (ushort)shop.ID;
+            Id = (ushort)shop.Id;
             Price = shop.BuyPrice;
 
             m_ShopsPlugin = shopsPlugin;
@@ -32,7 +32,7 @@ namespace Shops.Shops
             m_EventBus = eventBus;
         }
 
-        public ushort ID;
+        public ushort Id;
 
         public decimal Price;
 
@@ -45,14 +45,14 @@ namespace Shops.Shops
 
             decimal newBalance;
 
-            VehicleAsset asset = (VehicleAsset)Assets.find(EAssetType.VEHICLE, ID);
+            VehicleAsset asset = (VehicleAsset)Assets.find(EAssetType.VEHICLE, Id);
 
             if (asset == null)
             {
-                throw new Exception($"Vehicle asset for ID '{ID}' not found");
+                throw new Exception($"Vehicle asset for Id '{Id}' not found");
             }
 
-            var buyingEvent = new PlayerBuyingVehicleEvent(user, ID, Price);
+            var buyingEvent = new PlayerBuyingVehicleEvent(user, Id, Price);
             await m_EventBus.EmitAsync(m_ShopsPlugin, this, buyingEvent);
 
             if (buyingEvent.IsCancelled) return;
@@ -61,20 +61,20 @@ namespace Shops.Shops
 
             await UniTask.SwitchToMainThread();
 
-            VehicleTool.giveVehicle(user.Player.Player, ID);
+            VehicleTool.giveVehicle(user.Player.Player, Id);
 
             await user.PrintMessageAsync(m_StringLocalizer["shops:success:item_buy",
                 new
                 {
                     VehicleName = asset.vehicleName,
-                    VehicleID = asset.id,
+                    VehicleId = asset.id,
                     BuyPrice = Price,
                     Balance = newBalance,
                     m_EconomyProvider.CurrencyName,
                     m_EconomyProvider.CurrencySymbol,
                 }]);
 
-            var boughtEvent = new PlayerBoughtVehicleEvent(user, ID, Price);
+            var boughtEvent = new PlayerBoughtVehicleEvent(user, Id, Price);
             await m_EventBus.EmitAsync(m_ShopsPlugin, this, boughtEvent);
         }
     }

@@ -48,7 +48,7 @@ namespace Shops.Commands.Items
             {
                 shop = new SellItem()
                 {
-                    ID = asset.id,
+                    Id = asset.id,
                     SellPrice = price
                 };
 
@@ -67,7 +67,7 @@ namespace Shops.Commands.Items
                 new
                 {
                     ItemName = asset.itemName,
-                    ItemID = asset.id,
+                    ItemId = asset.id,
                     shop.SellPrice,
                     m_EconomyProvider.CurrencyName,
                     m_EconomyProvider.CurrencySymbol

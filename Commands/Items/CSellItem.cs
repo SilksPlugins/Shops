@@ -35,14 +35,14 @@ namespace Shops.Commands.Items
 
             if (asset == null)
             {
-                throw new UserFriendlyException(m_StringLocalizer["shops:fail:item_not_found", new { IDOrName = idOrName }]);
+                throw new UserFriendlyException(m_StringLocalizer["shops:fail:item_not_found", new { IdOrName = idOrName }]);
             }
 
             ShopSellItem shop = await m_ShopsPlugin.GetSellItemShop(asset.id);
 
             if (shop == null)
             {
-                await User.PrintMessageAsync(m_StringLocalizer["shops:fail:item_not_for_sell", new { ItemName = asset.itemName, ItemID = asset.id }]);
+                await User.PrintMessageAsync(m_StringLocalizer["shops:fail:item_not_for_sell", new { ItemName = asset.itemName, ItemId = asset.id }]);
             }
 
             await shop.Interact(User, amount);

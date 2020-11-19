@@ -2,18 +2,18 @@ shops:
   logs:
     plugin_loaded: "Shops database has been loaded"
     plugin_unloaded: "Shops unloaded"
-    asset_not_found: "Asset not found ({IDOrName})"
+    asset_not_found: "Asset not found ({IdOrName})"
   disabled:
     item_buy: "Purchasing items is disabled."
     item_sell: "Selling items is disabled."
     vehicle_buy: "Purchasing vehicles is disabled."
     vehicle_sell: "Selling vehicles is disabled."
   fail:
-    item_not_found: "The item '{IDOrName}' cannot be found."
+    item_not_found: "The item '{IdOrName}' cannot be found."
     item_not_for_sale: "{ItemName} cannot be purchased."
     item_not_for_sell: "{ItemName} cannot be sold."
     item_sell_not_enough: "You do not have {Amount} {ItemName} to sell."
-    vehicle_not_found: "The vehicle '{IDOrName}' cannot be found."
+    vehicle_not_found: "The vehicle '{IdOrName}' cannot be found."
     vehicle_not_for_sale: "{VehicleName} cannot be purchased."
     vehicle_not_for_sell: "{VehicleName} cannot be sold."
     amount_above_zero: "The amount must be greater than zero."

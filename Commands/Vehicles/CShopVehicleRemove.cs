@@ -45,21 +45,21 @@ namespace Shops.Commands.Vehicles
 
             if (asset == null)
             {
-                throw new UserFriendlyException(m_StringLocalizer["vehicle_not_found", new { IDOrName = idOrName }]);
+                throw new UserFriendlyException(m_StringLocalizer["vehicle_not_found", new { IdOrName = idOrName }]);
             }
 
             BuyVehicle shop = await m_DbContext.BuyVehicleShops.FindAsync((int)asset.id);
 
             if (shop == null)
             {
-                throw new UserFriendlyException(m_StringLocalizer["shops:fail:vehicle_buy_shop_doesnt_exist", new { VehicleName = asset.vehicleName, VehicleID = asset.id }]);
+                throw new UserFriendlyException(m_StringLocalizer["shops:fail:vehicle_buy_shop_doesnt_exist", new { VehicleName = asset.vehicleName, VehicleId = asset.id }]);
             }
 
             m_DbContext.BuyVehicleShops.Remove(shop);
 
             await m_DbContext.SaveChangesAsync();
 
-            throw new UserFriendlyException(m_StringLocalizer["shops:success:vehicle_buy_shop_removed", new { VehicleName = asset.vehicleName, VehicleID = asset.id }]);
+            throw new UserFriendlyException(m_StringLocalizer["shops:success:vehicle_buy_shop_removed", new { VehicleName = asset.vehicleName, VehicleId = asset.id }]);
         }
     }
 }

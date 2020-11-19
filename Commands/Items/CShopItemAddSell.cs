@@ -39,7 +39,7 @@ namespace Shops.Commands.Items
 
             if (asset == null)
             {
-                throw new UserFriendlyException(m_StringLocalizer["shops:fail:item_not_found", new { IDOrName = idOrName }]);
+                throw new UserFriendlyException(m_StringLocalizer["shops:fail:item_not_found", new { IdOrName = idOrName }]);
             }
 
             SellItem shop = await m_DbContext.SellItemShops.FindAsync((int)asset.id);
@@ -50,7 +50,7 @@ namespace Shops.Commands.Items
                     new
                     {
                         ItemName = asset.itemName,
-                        ItemID = asset.id,
+                        ItemId = asset.id,
                         shop.SellPrice,
                         m_EconomyProvider.CurrencyName,
                         m_EconomyProvider.CurrencySymbol
@@ -59,7 +59,7 @@ namespace Shops.Commands.Items
 
             shop = new SellItem()
             {
-                ID = asset.id,
+                Id = asset.id,
                 SellPrice = price
             };
 
@@ -71,7 +71,7 @@ namespace Shops.Commands.Items
                 new
                 {
                     ItemName = asset.itemName,
-                    ItemID = asset.id,
+                    ItemId = asset.id,
                     shop.SellPrice,
                     m_EconomyProvider.CurrencyName,
                     m_EconomyProvider.CurrencySymbol

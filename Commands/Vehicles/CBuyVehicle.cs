@@ -39,14 +39,14 @@ namespace Shops.Commands.Vehicles
 
             if (asset == null)
             {
-                throw new UserFriendlyException(m_StringLocalizer["vehicle_not_found", new { IDOrName = idOrName }]);
+                throw new UserFriendlyException(m_StringLocalizer["vehicle_not_found", new { IdOrName = idOrName }]);
             }
 
             ShopBuyVehicle shop = await m_ShopsPlugin.GetBuyVehicleShop(asset.id);
 
             if (shop == null)
             {
-                throw new UserFriendlyException(m_StringLocalizer["vehicle_not_for_sale", new { VehicleName = asset.vehicleName, VehicleID = asset.id }]);
+                throw new UserFriendlyException(m_StringLocalizer["vehicle_not_for_sale", new { VehicleName = asset.vehicleName, VehicleId = asset.id }]);
             }
 
             await shop.Interact(User);

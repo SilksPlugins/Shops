@@ -41,7 +41,7 @@ namespace Shops.Commands.Vehicles
 
             if (asset == null)
             {
-                throw new UserFriendlyException(m_StringLocalizer["vehicle_not_found", new { IDOrName = idOrName }]);
+                throw new UserFriendlyException(m_StringLocalizer["vehicle_not_found", new { IdOrName = idOrName }]);
             }
 
             BuyVehicle shop = await m_DbContext.BuyVehicleShops.FindAsync((int)asset.id);
@@ -50,7 +50,7 @@ namespace Shops.Commands.Vehicles
             {
                 shop = new BuyVehicle()
                 {
-                    ID = asset.id,
+                    Id = asset.id,
                     BuyPrice = price
                 };
 
@@ -69,7 +69,7 @@ namespace Shops.Commands.Vehicles
                 new
                 {
                     VehicleName = asset.vehicleName,
-                    VehicleID = asset.id,
+                    VehicleId = asset.id,
                     shop.BuyPrice,
                     m_EconomyProvider.CurrencyName,
                     m_EconomyProvider.CurrencySymbol

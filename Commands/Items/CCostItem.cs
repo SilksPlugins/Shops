@@ -45,7 +45,7 @@ namespace Shops.Commands.Items
 
             if (asset == null)
             {
-                throw new UserFriendlyException(m_StringLocalizer["shops:fail:item_not_found", new { IDOrName = idOrName }]);
+                throw new UserFriendlyException(m_StringLocalizer["shops:fail:item_not_found", new { IdOrName = idOrName }]);
             }
 
             BuyItem buyItem = null;
@@ -63,7 +63,7 @@ namespace Shops.Commands.Items
 
             if (buyItem == null && sellItem == null)
             {
-                await Context.Actor.PrintMessageAsync(m_StringLocalizer["shops:success:item_cost_none", new { ItemName = asset.itemName, ItemID = asset.id }]);
+                await Context.Actor.PrintMessageAsync(m_StringLocalizer["shops:success:item_cost_none", new { ItemName = asset.itemName, ItemId = asset.id }]);
             }
             else if (buyItem != null && sellItem == null)
             {
@@ -71,7 +71,7 @@ namespace Shops.Commands.Items
                     new
                     {
                         ItemName = asset.itemName,
-                        ItemID = asset.id,
+                        ItemId = asset.id,
                         buyItem.BuyPrice,
                         m_EconomyProvider.CurrencyName,
                         m_EconomyProvider.CurrencySymbol
@@ -83,7 +83,7 @@ namespace Shops.Commands.Items
                     new
                     {
                         ItemName = asset.itemName,
-                        ItemID = asset.id,
+                        ItemId = asset.id,
                         sellItem.SellPrice,
                         m_EconomyProvider.CurrencyName,
                         m_EconomyProvider.CurrencySymbol
@@ -95,7 +95,7 @@ namespace Shops.Commands.Items
                     new
                     {
                         ItemName = asset.itemName,
-                        ItemID = asset.id,
+                        ItemId = asset.id,
                         buyItem.BuyPrice,
                         sellItem.SellPrice,
                         m_EconomyProvider.CurrencyName,

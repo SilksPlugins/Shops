@@ -23,7 +23,7 @@ namespace Shops.Shops
             IEconomyProvider economyProvider,
             IEventBus eventBus)
         {
-            ID = (ushort)shop.ID;
+            Id = (ushort)shop.Id;
             Price = shop.BuyPrice;
 
             m_ShopsPlugin = shopsPlugin;
@@ -32,7 +32,7 @@ namespace Shops.Shops
             m_EventBus = eventBus;
         }
 
-        public ushort ID;
+        public ushort Id;
 
         public decimal Price;
 
@@ -42,14 +42,14 @@ namespace Shops.Shops
 
             decimal newBalance;
 
-            ItemAsset asset = (ItemAsset)Assets.find(EAssetType.ITEM, ID);
+            ItemAsset asset = (ItemAsset)Assets.find(EAssetType.ITEM, Id);
 
             if (asset == null)
             {
-                throw new Exception($"Item asset for ID '{ID}' not found");
+                throw new Exception($"Item asset for Id '{Id}' not found");
             }
 
-            var buyingEvent = new PlayerBuyingItemEvent(user, ID, amount, Price);
+            var buyingEvent = new PlayerBuyingItemEvent(user, Id, amount, Price);
             await m_EventBus.EmitAsync(m_ShopsPlugin, this, buyingEvent);
 
             if (buyingEvent.IsCancelled) return;
@@ -60,7 +60,7 @@ namespace Shops.Shops
 
             for (int i = 0; i < amount; i++)
             {
-                Item item = new Item(ID, EItemOrigin.ADMIN);
+                Item item = new Item(Id, EItemOrigin.ADMIN);
 
                 user.Player.Player.inventory.forceAddItem(item, true);
             }
@@ -69,7 +69,7 @@ namespace Shops.Shops
                 new
                 {
                     ItemName = asset.itemName,
-                    ItemID = asset.id,
+                    ItemId = asset.id,
                     Amount = amount,
                     BuyPrice = totalPrice,
                     Balance = newBalance,
@@ -77,7 +77,7 @@ namespace Shops.Shops
                     m_EconomyProvider.CurrencySymbol,
                 }]);
 
-            var boughtEvent = new PlayerBoughtItemEvent(user, ID, amount, Price);
+            var boughtEvent = new PlayerBoughtItemEvent(user, Id, amount, Price);
             await m_EventBus.EmitAsync(m_ShopsPlugin, this, boughtEvent);
         }
     }
