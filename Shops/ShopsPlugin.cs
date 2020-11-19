@@ -44,7 +44,6 @@ namespace Shops
         public bool CanSellItems => m_Configuration.GetSection("Shops:CanSellItems").Get<bool>();
         public bool CanBuyVehicles => m_Configuration.GetSection("Shops:CanBuyVehicles").Get<bool>();
         public bool CanSellVehicles => m_Configuration.GetSection("Shops:CanSellVehicles").Get<bool>();
-        public bool QualityCounts => m_Configuration.GetSection("Shops:QualityCounts").Get<bool>();
 
         protected override async UniTask OnLoadAsync()
         {

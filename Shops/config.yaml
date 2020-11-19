@@ -6,4 +6,3 @@ Shops:
   CanSellItems: true
   CanBuyVehicles: true
   CanSellVehicles: true #not yet implemented
-  QualityCounts: true #not yet implemented
