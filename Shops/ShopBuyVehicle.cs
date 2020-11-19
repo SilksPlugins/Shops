@@ -47,7 +47,7 @@ namespace Shops.Shops
 
             await UniTask.SwitchToMainThread();
 
-            VehicleTool.giveVehicle(user.Player, ID);
+            VehicleTool.giveVehicle(user.Player.Player, ID);
 
             await user.PrintMessageAsync(m_StringLocalizer["shops:success:item_buy",
                 new

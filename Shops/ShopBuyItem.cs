@@ -49,7 +49,7 @@ namespace Shops.Shops
             {
                 Item item = new Item(ID, EItemOrigin.ADMIN);
 
-                user.Player.inventory.forceAddItem(item, true);
+                user.Player.Player.inventory.forceAddItem(item, true);
             }
 
             await user.PrintMessageAsync(m_StringLocalizer["shops:success:item_buy",
