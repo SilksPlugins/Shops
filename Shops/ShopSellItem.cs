@@ -43,7 +43,7 @@ namespace Shops.Shops
                 throw new Exception($"Item asset for ID '{ID}' not found");
             }
 
-            List<InventorySearch> foundItems = user.Player.inventory.search(ID, true, true);
+            List<InventorySearch> foundItems = user.Player.Player.inventory.search(ID, true, true);
 
             if (foundItems.Count < amount)
             {
@@ -61,9 +61,9 @@ namespace Shops.Shops
             {
                 InventorySearch found = foundItems[i];
 
-                byte index = user.Player.inventory.getIndex(found.page, found.jar.x, found.jar.y);
+                byte index = user.Player.Player.inventory.getIndex(found.page, found.jar.x, found.jar.y);
 
-                user.Player.inventory.removeItem(found.page, index);
+                user.Player.Player.inventory.removeItem(found.page, index);
             }
 
             await UniTask.SwitchToThreadPool();
