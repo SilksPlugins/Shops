@@ -26,11 +26,14 @@ namespace Shops.Commands.Items
 
             var shop = await ShopManager.GetItemShopData(asset.ItemAssetId);
 
-            if (shop == null || shop.BuyPrice == null && shop.SellPrice == null)
+            var canBuy = shop?.BuyPrice != null && CanBuyItems;
+            var canSell = shop?.SellPrice != null && CanSellItems;
+
+            if (shop == null || !canBuy && !canSell)
                 throw new UserFriendlyException(
                     StringLocalizer["commands:errors:no_item_shop", new {ItemAsset = asset}]);
 
-            if (shop.BuyPrice != null && shop.SellPrice != null)
+            if (canBuy && canSell)
             {
                 // Buy and sell
                 await PrintAsync(StringLocalizer["commands:success:item_cost:buy_and_sell",
@@ -44,7 +47,7 @@ namespace Shops.Commands.Items
                         EconomyProvider.CurrencyName
                     }]);
             }
-            else if (shop.BuyPrice != null)
+            else if (canBuy)
             {
                 // Buy
                 await PrintAsync(StringLocalizer["commands:success:item_cost:buy",

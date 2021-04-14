@@ -30,6 +30,9 @@ commands:
     no_vehicle_shop: "No shop for {VehicleAsset.VehicleName} exists."
     no_buyable_vehicle_shop: "The vehicle {VehicleAsset.VehicleName} cannot be bought."
     no_inventory: "You do not have an inventory to add items to."
+    no_buy_items: "You cannot buy items."
+    no_sell_items: "You cannot sell items."
+    no_buy_vehicles: "You cannot buy vehicles."
 
 transactions:
   items:

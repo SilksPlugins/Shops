@@ -21,6 +21,8 @@ namespace Shops.Commands.Items
 
         protected override async Task OnExecuteAsync()
         {
+            AssertCanSellItems();
+
             var asset = await GetItemAsset(0);
             var amount = await GetAmount(1);
 

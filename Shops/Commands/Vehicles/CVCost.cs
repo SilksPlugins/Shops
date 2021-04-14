@@ -20,6 +20,8 @@ namespace Shops.Commands.Vehicles
 
         protected override async Task OnExecuteAsync()
         {
+            AssertCanBuyVehicles();
+
             var asset = await GetVehicleAsset(0);
 
             var shop = await ShopManager.GetVehicleShopData(asset.VehicleAssetId);

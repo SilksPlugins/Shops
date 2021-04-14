@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Localization;
 using OpenMod.API.Commands;
 using OpenMod.Core.Commands;
@@ -16,6 +17,7 @@ namespace Shops.Commands
     [DontAutoRegister]
     public abstract class ShopCommand : Command
     {
+        protected readonly IConfiguration Configuration;
         protected readonly IStringLocalizer StringLocalizer;
         protected readonly IItemDirectory ItemDirectory;
         protected readonly IVehicleDirectory VehicleDirectory;
@@ -25,11 +27,36 @@ namespace Shops.Commands
         protected ShopCommand(
             IServiceProvider serviceProvider) : base(serviceProvider)
         {
+            Configuration = serviceProvider.GetRequiredService<IConfiguration>();
             StringLocalizer = serviceProvider.GetRequiredService<IStringLocalizer>();
             ItemDirectory = serviceProvider.GetRequiredService<IItemDirectory>();
             VehicleDirectory = serviceProvider.GetRequiredService<IVehicleDirectory>();
             ShopManager = serviceProvider.GetRequiredService<IShopManager>();
             EconomyProvider = serviceProvider.GetRequiredService<IEconomyProvider>();
+        }
+
+        public bool CanBuyItems => Configuration.GetValue("Shops:CanBuyItems", true);
+
+        public bool CanSellItems => Configuration.GetValue("Shops:CanSellItems", true);
+
+        public bool CanBuyVehicles => Configuration.GetValue("Shops:CanBuyVehicles", true);
+
+        protected void AssertCanBuyItems()
+        {
+            if (!CanBuyItems)
+                throw new UserFriendlyException(StringLocalizer["commands:errors:no_buy_items"]);
+        }
+
+        protected void AssertCanSellItems()
+        {
+            if (!CanSellItems)
+                throw new UserFriendlyException(StringLocalizer["commands:errors:no_sell_items"]);
+        }
+
+        protected void AssertCanBuyVehicles()
+        {
+            if (!CanBuyVehicles)
+                throw new UserFriendlyException(StringLocalizer["commands:errors:no_buy_vehicles"]);
         }
 
         protected void ValidatePrice(decimal price)

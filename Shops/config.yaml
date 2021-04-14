@@ -1,3 +1,10 @@
 database:
   ConnectionStrings:
     default: "Server=127.0.0.1; Database=openmod; Port=3306; User=unturned; Password=password"
+
+Shops:
+  CanBuyItems: true
+  CanSellItems: true
+  CanBuyVehicles: true
+  CanSellVehicles: true #not yet implemented
+  QualityCounts: true #not yet implemented
