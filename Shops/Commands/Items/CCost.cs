@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Shops.Commands.Items
 {
-    [Command("cost", Priority = Priority.High)]
+    [Command("cost", Priority = Priority.Normal)]
     [CommandAlias("icost")]
     [CommandAlias("itemcost")]
     [CommandAlias("costi")]

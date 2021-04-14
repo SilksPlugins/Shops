@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Shops.Commands.Vehicles
 {
-    [Command("rem", Priority = Priority.High)]
+    [Command("rem", Priority = Priority.Normal)]
     [CommandAlias("r")]
     [CommandAlias("remove")]
     [CommandAlias("-")]

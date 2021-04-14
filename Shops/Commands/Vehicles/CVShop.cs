@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace Shops.Commands.Vehicles
 {
-    [Command("vshop", Priority = Priority.High)]
+    [Command("vshop", Priority = Priority.Normal)]
     [CommandAlias("vshops")]
     [CommandAlias("vehicleshop")]
     [CommandAlias("vehicleshops")]

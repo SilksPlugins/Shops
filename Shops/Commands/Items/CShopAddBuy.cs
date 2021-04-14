@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace Shops.Commands.Items
 {
-    [Command("buy", Priority = Priority.High)]
+    [Command("buy", Priority = Priority.Normal)]
     [CommandAlias("b")]
     [CommandSyntax("<item> <price>")]
     [CommandDescription("Adds the item to the shop to be bought.")]

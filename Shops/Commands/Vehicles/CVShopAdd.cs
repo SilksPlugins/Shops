@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace Shops.Commands.Vehicles
 {
-    [Command("add", Priority = Priority.High)]
+    [Command("add", Priority = Priority.Normal)]
     [CommandAlias("a")]
     [CommandAlias("+")]
     [CommandSyntax("<vehicle> <price>")]

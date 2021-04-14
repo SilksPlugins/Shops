@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Shops.Commands
 {
-    [Command("reload", Priority = Priority.High)]
+    [Command("reload", Priority = Priority.Normal)]
     [CommandDescription("Reloads the shops from the database.")]
     [CommandParent(typeof(CShop))]
     public class CShopReload : Command
