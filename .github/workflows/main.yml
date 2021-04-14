@@ -29,3 +29,9 @@ jobs:
       run: dotnet nuget push Shops/bin/Release/*.nupkg
              --api-key ${{ secrets.NUGET_DEPLOY_KEY }}
              --source https://api.nuget.org/v3/index.json
+             --skip-duplicate
+    - name: Push to GitHub
+      run: dotnet nuget push Shops/bin/Release/*.nupkg
+             --api-key ${{ secrets.GH_DEPLOY_KEY }}
+             --source https://nuget.pkg.github.com/iamsilk/index.json
+             --skip-duplicate
