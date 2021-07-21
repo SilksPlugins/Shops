@@ -1,7 +1,6 @@
-﻿using Autofac;
+using Autofac;
 using OpenMod.API.Plugins;
 using OpenMod.Core.Plugins;
-using OpenMod.EntityFrameworkCore.Extensions;
 using OpenMod.Extensions.Economy.Abstractions;
 using Shops.Database;
 using System;
@@ -27,6 +26,7 @@ namespace Shops
             LifetimeScope.Resolve<IEconomyProvider>();
 
             await _dbContext.OpenModMigrateAsync();
+
         }
 
         protected override Task OnUnloadAsync() => Task.CompletedTask;
