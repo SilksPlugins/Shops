@@ -1,5 +1,5 @@
 ﻿using OpenMod.API.Plugins;
-using OpenMod.EntityFrameworkCore.Extensions;
+using OpenMod.EntityFrameworkCore.MySql.Extensions;
 using Shops.Database;
 
 namespace Shops
@@ -8,8 +8,7 @@ namespace Shops
     {
         public void ConfigureContainer(IPluginServiceConfigurationContext context)
         {
-            context.ContainerBuilder.AddEntityFrameworkCoreMySql();
-            context.ContainerBuilder.AddDbContext<ShopsDbContext>();
+            context.ContainerBuilder.AddMySqlDbContext<ShopsDbContext>();
         }
     }
 }
