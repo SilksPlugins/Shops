@@ -33,5 +33,5 @@ jobs:
     - name: Push to GitHub
       run: dotnet nuget push Shops/bin/Release/*.nupkg
              --api-key ${{ secrets.GH_DEPLOY_KEY }}
-             --source https://nuget.pkg.github.com/iamsilk/index.json
+             --source https://nuget.pkg.github.com/silksplugins/index.json
              --skip-duplicate
