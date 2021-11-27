@@ -48,8 +48,4 @@
 		<EmbeddedResource Include="translations.yaml" />
 	</ItemGroup>
 
-	<ItemGroup>
-	  <Folder Include="Migrations\" />
-	</ItemGroup>
-
 </Project>
