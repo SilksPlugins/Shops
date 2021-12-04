@@ -8,6 +8,7 @@ namespace Shops.Database.Models
     public class VehicleShopModel : IVehicleShopData
     {
         [Key]
+        [MaxLength(128)]
         public string VehicleId { get; set; }
 
         public decimal BuyPrice { get; set; }

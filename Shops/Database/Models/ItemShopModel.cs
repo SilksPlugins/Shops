@@ -8,6 +8,7 @@ namespace Shops.Database.Models
     public class ItemShopModel : IItemShopData
     {
         [Key]
+        [MaxLength(128)]
         public string ItemId { get; set; }
 
         public decimal? BuyPrice { get; set; }

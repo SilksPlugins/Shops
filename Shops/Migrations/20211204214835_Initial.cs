@@ -10,7 +10,7 @@ namespace Shops.Migrations
                 name: "Shops_ItemShops",
                 columns: table => new
                 {
-                    ItemId = table.Column<string>(nullable: false),
+                    ItemId = table.Column<string>(maxLength: 128, nullable: false),
                     BuyPrice = table.Column<decimal>(nullable: true),
                     SellPrice = table.Column<decimal>(nullable: true)
                 },
@@ -23,7 +23,7 @@ namespace Shops.Migrations
                 name: "Shops_VehicleShops",
                 columns: table => new
                 {
-                    VehicleId = table.Column<string>(nullable: false),
+                    VehicleId = table.Column<string>(maxLength: 128, nullable: false),
                     BuyPrice = table.Column<decimal>(nullable: false)
                 },
                 constraints: table =>
